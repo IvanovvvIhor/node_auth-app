@@ -11,7 +11,6 @@ interface AxiosErrorResponse {
 }
 
 const ActivationPage = () => {
-  // Типізуємо параметри, що приходять з URL
   const { email, token } = useParams<{ email: string; token: string }>();
   const navigate = useNavigate();
 
@@ -20,7 +19,6 @@ const ActivationPage = () => {
 
   useEffect(() => {
     const activateAccount = async () => {
-      // Перевіряємо, чи є параметри, щоб уникнути помилок
       if (!email || !token) {
         setStatus('error');
         setErrorMessage('Відсутні дані для активації');
@@ -32,7 +30,7 @@ const ActivationPage = () => {
         setStatus('success');
 
         setTimeout(() => {
-          navigate('/?activated=true');
+          navigate('/profile');
         }, 3000);
       } catch (err: unknown) {
         const errorData = err as AxiosErrorResponse;
@@ -52,7 +50,7 @@ const ActivationPage = () => {
         {status === 'success' && (
           <>
             <h2 className="text-success">Акаунт успішно активовано!</h2>
-            <p>Зараз ви будете перенаправлені на головну сторінку...</p>
+            <p>Зараз ви будете перенаправлені на сторінку профілю...</p>
           </>
         )}
 

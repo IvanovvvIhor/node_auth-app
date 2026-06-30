@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { closeLoginModal, openRegisterModal, loginUser } from '../../../store/authSlice';
-import { type AppDispatch } from '../../../store';
+import { type AppDispatch, type RootState } from '../../../store'; // Переконайся, що імпортуєш RootState
 
 const LoginModal = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+
+  const { error } = useSelector((state: RootState) => state.auth);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +28,14 @@ const LoginModal = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+    try {
+      await dispatch(loginUser({ email, password })).unwrap();
+
+      handleClose();
+      navigate('/profile');
+    } catch (err) {
+      console.error('Login failed:', err);
+    }
   };
 
   return (
@@ -34,6 +43,8 @@ const LoginModal = () => {
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={handleClose}>&times;</button>
         <h2>Вхід у систему</h2>
+
+        {error && <p style={{ color: 'var(--danger)', marginBottom: '1rem' }}>{error}</p>}
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">

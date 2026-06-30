@@ -9,25 +9,23 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 // Компоненти
-import ProtectedRoute from './components/common/ProtectedRoute';
+import AuthGuard from './components/common/AuthGuard';
 import './App.css';
 
 export const App = () => {
   return (
     <Routes>
-      {/* Публічні маршрути */}
       <Route path="/" element={<HomePage />} />
       <Route path="/auth/activation/:email/:token" element={<ActivationPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password/:token" element={<ResetPassword />} />
 
-      {/* Захищений маршрут */}
       <Route
         path="/profile"
         element={
-          <ProtectedRoute>
+          <AuthGuard>
             <ProfilePage />
-          </ProtectedRoute>
+          </AuthGuard>
         }
       />
 

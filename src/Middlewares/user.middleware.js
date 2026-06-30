@@ -1,3 +1,5 @@
+'use strict';
+
 const jwt = require('../utils/jwt.js');
 
 function authMiddleware(req, res, next) {
@@ -5,18 +7,16 @@ function authMiddleware(req, res, next) {
   const [, accessToken] = authHeader.split(' ');
 
   if (!authHeader || !accessToken) {
-    res.status(401).json({ message: 'Token is required' });
-
-    return;
+    return res.status(401).json({ message: 'Token is required' });
   }
 
   const userData = jwt.validateAccessToken(accessToken);
 
   if (!userData) {
-    res.status(401).json({ message: 'Invalid token' });
-
-    return;
+    return res.status(401).json({ message: 'Invalid token' });
   }
+
+  req.user = userData;
 
   next();
 }
